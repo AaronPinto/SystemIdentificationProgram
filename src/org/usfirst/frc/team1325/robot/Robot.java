@@ -146,6 +146,7 @@ public class Robot extends IterativeRobot {
 							i.leftSpeed + "," + i.rightSpeed);
 					bw.newLine();
 				}
+				bw.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
