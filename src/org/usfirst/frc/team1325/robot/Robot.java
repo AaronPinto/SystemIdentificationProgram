@@ -81,50 +81,47 @@ public class Robot extends IterativeRobot {
 		}
 	}
 
-	Thread logThread = new Thread();
+	private Thread logThread;
 	public void teleopInit() {
-		logThread = new Thread() {
-			@Override
-			public void run() {
-				boolean secondSide = true;
-				double start, start2, startTime = start = start2 = System.nanoTime();
-				while(!Thread.interrupted()) {
-					delta = (System.nanoTime() - startTime) / 1000000;
-					if(((System.nanoTime() - start) / 1000000000) < 120) {
-						if(delta >= 2.0) {
-							double now = System.nanoTime();
-							Robot._driveRightFront.set(-12 * Math.sin(0.4 * Math.pow((now - start2) / 1000000000, 2)));
-							Robot._driveRightRear.set(-12 * Math.sin(0.4 * Math.pow((now - start2) / 1000000000, 2)));
-							logs.add(new Data(Robot._driveLeftFront.getOutputVoltage(), Robot._driveRightFront.getOutputVoltage(), 
-									Robot._driveLeftRear.getOutputVoltage(), Robot._driveRightRear.getOutputVoltage(),
-									Robot._driveLeftFront.getSpeed(), Robot._driveRightFront.getSpeed()));
-							startTime = System.nanoTime();
-						}
-					} else if((((System.nanoTime() - start) / 1000000000) >= 120) && (((System.nanoTime() - start) / 1000000000) <= 240)) {
-						if(secondSide) {
-							secondSide = false;
-							Robot._driveRightFront.set(0.0);
-							Robot._driveRightRear.set(0.0);
-							start2 = System.nanoTime();
-						}
-						if(delta >= 2.0) {
-							double now = System.nanoTime();
-							Robot._driveLeftFront.set(12 * Math.sin(0.4 * Math.pow((now - start2) / 1000000000, 2)));
-							Robot._driveLeftRear.set(12 * Math.sin(0.4 * Math.pow((now - start2) / 1000000000, 2)));
-							logs.add(new Data(Robot._driveLeftFront.getOutputVoltage(), Robot._driveRightFront.getOutputVoltage(), 
-									Robot._driveLeftRear.getOutputVoltage(), Robot._driveRightRear.getOutputVoltage(),
-									Robot._driveLeftFront.getSpeed(), Robot._driveRightFront.getSpeed()));
-							startTime = System.nanoTime();
-						}
-					} else {
-						Robot._driveLeftFront.set(0.0);
-						Robot._driveLeftRear.set(0.0);
+		logThread = new Thread(() -> {
+			boolean secondSide = true;
+			double start, start2, startTime = start = start2 = System.nanoTime();
+			while(!Thread.interrupted()) {
+				delta = (System.nanoTime() - startTime) / 1000000;
+				if(((System.nanoTime() - start) / 1000000000) < 120) {
+					if(delta >= 2.0) {
+						double now = System.nanoTime();
+						Robot._driveRightFront.set(-12 * Math.sin(0.4 * Math.pow((now - start2) / 1000000000, 2)));
+						Robot._driveRightRear.set(-12 * Math.sin(0.4 * Math.pow((now - start2) / 1000000000, 2)));
+						logs.add(new Data(Robot._driveLeftFront.getOutputVoltage(), Robot._driveRightFront.getOutputVoltage(),
+								Robot._driveLeftRear.getOutputVoltage(), Robot._driveRightRear.getOutputVoltage(),
+								Robot._driveLeftFront.getSpeed(), Robot._driveRightFront.getSpeed()));
+						startTime = System.nanoTime();
+					}
+				} else if((((System.nanoTime() - start) / 1000000000) >= 120) && (((System.nanoTime() - start) / 1000000000) <= 240)) {
+					if(secondSide) {
+						secondSide = false;
 						Robot._driveRightFront.set(0.0);
 						Robot._driveRightRear.set(0.0);
+						start2 = System.nanoTime();
 					}
+					if(delta >= 2.0) {
+						double now = System.nanoTime();
+						Robot._driveLeftFront.set(12 * Math.sin(0.4 * Math.pow((now - start2) / 1000000000, 2)));
+						Robot._driveLeftRear.set(12 * Math.sin(0.4 * Math.pow((now - start2) / 1000000000, 2)));
+						logs.add(new Data(Robot._driveLeftFront.getOutputVoltage(), Robot._driveRightFront.getOutputVoltage(),
+								Robot._driveLeftRear.getOutputVoltage(), Robot._driveRightRear.getOutputVoltage(),
+								Robot._driveLeftFront.getSpeed(), Robot._driveRightFront.getSpeed()));
+						startTime = System.nanoTime();
+					}
+				} else {
+					Robot._driveLeftFront.set(0.0);
+					Robot._driveLeftRear.set(0.0);
+					Robot._driveRightFront.set(0.0);
+					Robot._driveRightRear.set(0.0);
 				}
 			}
-		};
+		});
 		logThread.start();
 	}
 

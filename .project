@@ -3,7 +3,7 @@
 	<name>SystemIdentificationProgram</name>
 	<comment></comment>
 	<projects>
-		<project>dankmemes</project>
+		<project>mvmemes</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
