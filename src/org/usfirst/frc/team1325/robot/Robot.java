@@ -1,24 +1,24 @@
 package org.usfirst.frc.team1325.robot;
 
+import com.ctre.CANTalon;
+import com.ctre.CANTalon.FeedbackDevice;
+import com.ctre.CANTalon.TalonControlMode;
+import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import com.ctre.CANTalon;
-import com.ctre.CANTalon.FeedbackDevice;
-import com.ctre.CANTalon.TalonControlMode;
-import edu.wpi.first.wpilibj.*;
-import edu.wpi.first.wpilibj.command.*;
-import edu.wpi.first.wpilibj.smartdashboard.*;
 
 @SuppressWarnings("unused")
 public class Robot extends IterativeRobot {
-	public static final CANTalon _driveLeftFront = new CANTalon(2);//Has mag encoder plugged in Positive = For
-	public static final CANTalon _driveLeftRear = new CANTalon(3);
-	public static final CANTalon _driveRightFront = new CANTalon(13);//Has mag encoder plugged in Negative = For
-	public static final CANTalon _driveRightRear = new CANTalon(12);
+	private static final CANTalon _driveLeftFront = new CANTalon(2);//Has mag encoder plugged in Positive = For
+	private static final CANTalon _driveLeftRear = new CANTalon(3);
+	private static final CANTalon _driveRightFront = new CANTalon(13);//Has mag encoder plugged in Negative = For
+	private static final CANTalon _driveRightRear = new CANTalon(12);
 
 	@Override
 	public void robotInit() {
@@ -60,8 +60,8 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("Thread dT", delta);
 	}
 
-	double delta = 0;
-	public ArrayList<Data> logs = new ArrayList<Data>(1000000);
+	private double delta = 0;
+	private ArrayList<Data> logs = new ArrayList<>(1000000);
 
 	class Data {
 		Double leftFrontVolt;
@@ -125,8 +125,7 @@ public class Robot extends IterativeRobot {
 		logThread.start();
 	}
 
-	BufferedWriter bw;
-	Calendar c = Calendar.getInstance();
+	private Calendar c = Calendar.getInstance();
 	public void disabledInit() {
 		logThread.interrupt();
 
@@ -134,7 +133,7 @@ public class Robot extends IterativeRobot {
 			File f = new File("/home/lvuser/logs");
 			if(!f.exists()) f.mkdir();
 			try {
-				bw = new BufferedWriter(new FileWriter(String.format("/home/lvuser/logs/%tB%te%tY-%tl%tM%tS%tp.csv",
+				BufferedWriter bw = new BufferedWriter(new FileWriter(String.format("/home/lvuser/logs/%tB%te%tY-%tl%tM%tS%tp.csv",
 						c, c, c, c, c, c, c)));
 				bw.write("leftFrontVolt, rightFrontVolt, leftRearVolt, rightRearVolt, leftSpeed, rightSpeed");
 				bw.newLine();
