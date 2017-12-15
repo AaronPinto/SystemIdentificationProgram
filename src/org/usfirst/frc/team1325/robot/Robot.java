@@ -91,7 +91,7 @@ public class Robot extends IterativeRobot {
 				if(((System.nanoTime() - start) / 1000000000) < 120) {
 					if(delta >= 2.0) {
 						double now = System.nanoTime();
-						//y = -12sin(x^2)
+						//y = -12sin(0.4x^2)
 						Robot._driveRightFront.set(-12 * Math.sin(0.4 * Math.pow((now - start2) / 1000000000, 2)));
 						Robot._driveRightRear.set(-12 * Math.sin(0.4 * Math.pow((now - start2) / 1000000000, 2)));
 						logs.add(new Data(Robot._driveLeftFront.getOutputVoltage(), Robot._driveRightFront.getOutputVoltage(),
