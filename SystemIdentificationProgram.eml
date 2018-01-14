@@ -2,19 +2,8 @@
 <component inheritJdk="true">
 	<exclude-output/>
 	<contentEntry url="file://$MODULE_DIR$"/>
-	<lib name="wpilib" scope="COMPILE">
-		<srcroot url="file://$wpilib.sources$"/>
-	</lib>
-	<lib name="networktables" scope="COMPILE">
-		<srcroot url="file://$networktables.sources$"/>
-	</lib>
-	<lib name="cscore" scope="COMPILE">
-		<srcroot url="file://$cscore.sources$"/>
-	</lib>
-	<lib name="opencv" scope="COMPILE">
-		<srcroot url="file://$opencv.sources$"/>
-	</lib>
-	<lib name="CTRLib.jar" scope="COMPILE">
-		<srcroot url="file://$ctrlib.sources$"/>
-	</lib>
+	<levels>
+		<level name="dank" value="project"/>
+		<level name="lib" value="project"/>
+	</levels>
 </component>
