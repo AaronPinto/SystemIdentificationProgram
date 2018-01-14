@@ -1,125 +1,140 @@
 package org.usfirst.frc.team1325.robot;
 
-import com.ctre.CANTalon;
-import com.ctre.CANTalon.FeedbackDevice;
-import com.ctre.CANTalon.TalonControlMode;
+import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
+import java.io.*;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public class Robot extends IterativeRobot {
-	private static final CANTalon _driveLeftFront = new CANTalon(2);//Has mag encoder plugged in Positive = For
-	private static final CANTalon _driveLeftRear = new CANTalon(3);
-	private static final CANTalon _driveRightFront = new CANTalon(13);//Has mag encoder plugged in Negative = For
-	private static final CANTalon _driveRightRear = new CANTalon(12);
+	private static final TalonSRX _driveLeftFront = new TalonSRX(2);//Has mag encoder plugged in Positive = For
+	private static final TalonSRX _driveLeftRear = new TalonSRX(3);
+	private static final TalonSRX _driveRightFront = new TalonSRX(13);//Has mag encoder plugged in Negative = For
+	private static final TalonSRX _driveRightRear = new TalonSRX(12);
 
 	@Override
 	public void robotInit() {
-		_driveLeftFront.changeControlMode(TalonControlMode.Voltage);
-		_driveLeftFront.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
-		_driveLeftFront.reverseSensor(true);
-		_driveLeftFront.setNominalClosedLoopVoltage(12.0);
-		_driveLeftFront.configPeakOutputVoltage(+12f, -12f);
-		_driveLeftFront.setAllowableClosedLoopErr(0);
-		_driveLeftFront.enableBrakeMode(true);
-		_driveLeftFront.setCurrentLimit(40);
-		_driveLeftFront.EnableCurrentLimit(true);
-		_driveRightFront.changeControlMode(TalonControlMode.Voltage);
-		_driveRightFront.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
-		_driveRightFront.reverseSensor(true);
-		_driveRightFront.setNominalClosedLoopVoltage(12.0);
-		_driveRightFront.configPeakOutputVoltage(+12f, -12f);
-		_driveRightFront.setAllowableClosedLoopErr(0);
-		_driveRightFront.enableBrakeMode(true);
-		_driveRightFront.setCurrentLimit(40);
-		_driveRightFront.EnableCurrentLimit(true);
-		_driveLeftRear.changeControlMode(TalonControlMode.Voltage);
-		_driveLeftRear.setNominalClosedLoopVoltage(12.0);
-		_driveLeftRear.configPeakOutputVoltage(+12f, -12f);
-		_driveLeftRear.setAllowableClosedLoopErr(0);
-		_driveLeftRear.enableBrakeMode(true);
-		_driveLeftRear.setCurrentLimit(40);
-		_driveLeftRear.EnableCurrentLimit(true);
-		_driveRightRear.changeControlMode(TalonControlMode.Voltage);
-		_driveRightRear.setNominalClosedLoopVoltage(12.0);
-		_driveRightRear.configPeakOutputVoltage(+12f, -12f);
-		_driveRightRear.setAllowableClosedLoopErr(0);
-		_driveRightRear.enableBrakeMode(true);
-		_driveRightRear.setCurrentLimit(40);
-		_driveRightRear.EnableCurrentLimit(true);
-	}
-
-	public void robotPeriodic() {
-		SmartDashboard.putNumber("Thread dT", delta);
+		_driveLeftFront.set(ControlMode.PercentOutput, 0.0);
+		_driveLeftFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+		_driveLeftFront.setSensorPhase(true);
+		_driveLeftFront.setNeutralMode(NeutralMode.Brake);
+		_driveLeftFront.configContinuousCurrentLimit(40, 10);
+		_driveLeftFront.configPeakCurrentLimit(60, 10);
+		_driveLeftFront.configPeakCurrentDuration(50, 10);
+		_driveLeftFront.enableCurrentLimit(true);
+		_driveLeftFront.configVoltageCompSaturation(12.0, 10);
+		_driveLeftFront.enableVoltageCompensation(true);
+		_driveRightFront.set(ControlMode.PercentOutput, 0.0);
+		_driveRightFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+		_driveRightFront.setSensorPhase(true);
+		_driveRightFront.setNeutralMode(NeutralMode.Brake);
+		_driveRightFront.configContinuousCurrentLimit(40, 10);
+		_driveRightFront.configPeakCurrentLimit(60, 10);
+		_driveRightFront.configPeakCurrentDuration(50, 10);
+		_driveRightFront.enableCurrentLimit(true);
+		_driveRightFront.configVoltageCompSaturation(12.0, 10);
+		_driveRightFront.enableVoltageCompensation(true);
+		_driveLeftRear.set(ControlMode.PercentOutput, 0.0);
+		_driveLeftRear.setNeutralMode(NeutralMode.Brake);
+		_driveLeftRear.configContinuousCurrentLimit(40, 10);
+		_driveLeftRear.configPeakCurrentLimit(60, 10);
+		_driveLeftRear.configPeakCurrentDuration(50, 10);
+		_driveLeftRear.enableCurrentLimit(true);
+		_driveLeftRear.configVoltageCompSaturation(12.0, 10);
+		_driveLeftRear.enableVoltageCompensation(true);
+		_driveRightRear.set(ControlMode.PercentOutput, 0.0);
+		_driveRightRear.setNeutralMode(NeutralMode.Brake);
+		_driveRightRear.configContinuousCurrentLimit(40, 10);
+		_driveRightRear.configPeakCurrentLimit(60, 10);
+		_driveRightRear.configPeakCurrentDuration(50, 10);
+		_driveRightRear.enableCurrentLimit(true);
+		_driveRightRear.configVoltageCompSaturation(12.0, 10);
+		_driveRightRear.enableVoltageCompensation(true);
 	}
 
 	private double delta = 0;
-	private ArrayList<Data> logs = new ArrayList<>(1000000);
+	private Data[] logs = new Data[6000];
+	{
+		for(int i = 0; i < logs.length; i++)
+			logs[i] = new Data();
+	}
 
 	class Data {
-		Double leftFrontVolt;
-		Double rightFrontVolt;
-		Double leftRearVolt;
-		Double rightRearVolt;
-		Double leftSpeed;
-		Double rightSpeed;
-
-		Data(double lFV, double rFV, double lRV, double rRV, double lS, double rS) {
-			this.leftFrontVolt = lFV;
-			this.rightFrontVolt = rFV;
-			this.leftRearVolt = lRV;
-			this.rightRearVolt = rRV;
-			this.leftSpeed = lS;
-			this.rightSpeed = rS;
+		Double leftFront;
+		Double leftRear;
+		Double rightFront;
+		Double rightRear;
+		int leftVelocityNativeUnits;
+		int rightVelocityNativeUnits;
+		Double time;
+		
+		Data() {
+			this.leftFront = 0.0;
+			this.leftRear = 0.0;
+			this.rightFront = 0.0;
+			this.rightRear = 0.0;
+			this.leftVelocityNativeUnits = 0;
+			this.rightVelocityNativeUnits = 0;
+			this.time = 0.0;
 		}
 	}
 
-	private Thread logThread;
+	private Thread logThread = new Thread();
+	private double avgdT, time = avgdT = 0.0;
+	private int counter = 0;
 	public void teleopInit() {
 		logThread = new Thread(() -> {
 			boolean secondSide = true;
-			double start, start2, startTime = start = start2 = System.nanoTime();
+			double start, start2, startTime = start = start2 = time = System.nanoTime();
 			while(!Thread.interrupted()) {
-				delta = (System.nanoTime() - startTime) / 1000000;
-				if(((System.nanoTime() - start) / 1000000000) < 120) {
-					if(delta >= 2.0) {
-						double now = System.nanoTime();
-						//y = -12sin(0.4x^2)
-						Robot._driveRightFront.set(-12 * Math.sin(0.4 * Math.pow((now - start2) / 1000000000, 2)));
-						Robot._driveRightRear.set(-12 * Math.sin(0.4 * Math.pow((now - start2) / 1000000000, 2)));
-						logs.add(new Data(Robot._driveLeftFront.getOutputVoltage(), Robot._driveRightFront.getOutputVoltage(),
-								Robot._driveLeftRear.getOutputVoltage(), Robot._driveRightRear.getOutputVoltage(),
-								Robot._driveLeftFront.getSpeed(), Robot._driveRightFront.getSpeed()));
+				delta = (System.nanoTime() - startTime) / 1000000000;//While loop period
+				if(((System.nanoTime() - start) / 1000000000) < 30) {//Which side
+					if(delta >= 0.015) {
 						startTime = System.nanoTime();
+						avgdT += delta;
+						counter++;
+						//y = -sin(0.4x^2)
+						Robot._driveRightFront.set(ControlMode.PercentOutput, -1 * Math.sin(0.4 * Math.pow((startTime - start2) /
+								1000000000, 2)));
+						Robot._driveRightRear.set(ControlMode.PercentOutput, -1 * Math.sin(0.4 * Math.pow((startTime - start2) /
+								1000000000, 2)));
+						logs[counter].leftFront = _driveLeftFront.getMotorOutputPercent();
+						logs[counter].leftRear = _driveLeftRear.getMotorOutputPercent();
+						logs[counter].rightFront = _driveRightFront.getMotorOutputPercent();
+						logs[counter].rightRear = _driveRightRear.getMotorOutputPercent();
+						logs[counter].leftVelocityNativeUnits = _driveLeftFront.getSelectedSensorVelocity(0);
+						logs[counter].rightVelocityNativeUnits = _driveRightFront.getSelectedSensorVelocity(0); 
+						logs[counter].time = (System.nanoTime() - time) / 1000000000;
 					}
-				} else if((((System.nanoTime() - start) / 1000000000) >= 120) && (((System.nanoTime() - start) / 1000000000) <= 240)) {
+				} else if((((System.nanoTime() - start) / 1000000000) >= 30) && (((System.nanoTime() - start) / 1000000000) <= 60)) {
 					if(secondSide) {
 						secondSide = false;
-						Robot._driveRightFront.set(0.0);
-						Robot._driveRightRear.set(0.0);
+						Robot._driveRightFront.set(ControlMode.PercentOutput, 0.0);
+						Robot._driveRightRear.set(ControlMode.PercentOutput, 0.0);
 						start2 = System.nanoTime();
 					}
-					if(delta >= 2.0) {
-						double now = System.nanoTime();
-						Robot._driveLeftFront.set(12 * Math.sin(0.4 * Math.pow((now - start2) / 1000000000, 2)));
-						Robot._driveLeftRear.set(12 * Math.sin(0.4 * Math.pow((now - start2) / 1000000000, 2)));
-						logs.add(new Data(Robot._driveLeftFront.getOutputVoltage(), Robot._driveRightFront.getOutputVoltage(),
-								Robot._driveLeftRear.getOutputVoltage(), Robot._driveRightRear.getOutputVoltage(),
-								Robot._driveLeftFront.getSpeed(), Robot._driveRightFront.getSpeed()));
+					if(delta >= 0.015) {
+						avgdT += delta;
+						counter++;
 						startTime = System.nanoTime();
+						Robot._driveLeftFront.set(ControlMode.PercentOutput, Math.sin(0.4 * Math.pow((startTime - start2) / 1000000000, 2)));
+						Robot._driveLeftRear.set(ControlMode.PercentOutput, Math.sin(0.4 * Math.pow((startTime - start2) / 1000000000, 2)));
+						logs[counter].leftFront = _driveLeftFront.getMotorOutputPercent();
+						logs[counter].leftRear = _driveLeftRear.getMotorOutputPercent();
+						logs[counter].rightFront = _driveRightFront.getMotorOutputPercent();
+						logs[counter].rightRear = _driveRightRear.getMotorOutputPercent();
+						logs[counter].leftVelocityNativeUnits = _driveLeftFront.getSelectedSensorVelocity(0);
+						logs[counter].rightVelocityNativeUnits = _driveRightFront.getSelectedSensorVelocity(0); 
+						logs[counter].time = (System.nanoTime() - time) / 1000000000;
 					}
 				} else {
-					Robot._driveLeftFront.set(0.0);
-					Robot._driveLeftRear.set(0.0);
-					Robot._driveRightFront.set(0.0);
-					Robot._driveRightRear.set(0.0);
+					time = System.nanoTime();
+					Robot._driveLeftFront.set(ControlMode.PercentOutput, 0.0);
+					Robot._driveLeftRear.set(ControlMode.PercentOutput, 0.0);
+					Robot._driveRightFront.set(ControlMode.PercentOutput, 0.0);
+					Robot._driveRightRear.set(ControlMode.PercentOutput, 0.0);
 				}
 			}
 		});
@@ -128,6 +143,10 @@ public class Robot extends IterativeRobot {
 
 	private Calendar c = Calendar.getInstance();
 	public void disabledInit() {
+		Robot._driveLeftFront.set(ControlMode.PercentOutput, 0.0);
+		Robot._driveLeftRear.set(ControlMode.PercentOutput, 0.0);
+		Robot._driveRightFront.set(ControlMode.PercentOutput, 0.0);
+		Robot._driveRightRear.set(ControlMode.PercentOutput, 0.0);
 		logThread.interrupt();
 
 		if(logThread.isInterrupted()) {
@@ -136,14 +155,16 @@ public class Robot extends IterativeRobot {
 			try {
 				BufferedWriter bw = new BufferedWriter(new FileWriter(String.format("/home/lvuser/logs/%tB%te%tY-%tl%tM%tS%tp.csv",
 						c, c, c, c, c, c, c)));
-				bw.write("leftFrontVolt, rightFrontVolt, leftRearVolt, rightRearVolt, leftSpeed, rightSpeed");
+				bw.write("leftFrontVolt, leftRearVolt, rightFrontVolt, rightRearVolt, leftSpeed, rightSpeed, time");
 				bw.newLine();
-				for(Data i : logs) {
-					bw.write(i.leftFrontVolt + "," + i.rightFrontVolt + "," + i.leftRearVolt + "," + i.rightRearVolt + "," + 
-							i.leftSpeed + "," + i.rightSpeed);
+				for(int i = 0; i < logs.length; i++) {
+					bw.write(logs[i].leftFront + "," + logs[i].leftRear + ", " + logs[i].rightFront + 
+							"," + logs[i].rightRear + "," + logs[i].leftVelocityNativeUnits + "," + logs[i].rightVelocityNativeUnits + ", "
+							+ logs[i].time);
 					bw.newLine();
 				}
 				bw.close();
+				System.out.println("DONE " + logs.length + " " + avgdT / counter + " " + (System.nanoTime() - time) / 1000000000);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
