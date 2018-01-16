@@ -29,28 +29,28 @@ public class Robot extends IterativeRobot {
 		_driveLeftFront.setSensorPhase(true);
 		_driveLeftFront.setNeutralMode(NeutralMode.Brake);
 		_driveLeftFront.configContinuousCurrentLimit(40, 10);
-		_driveLeftFront.configPeakCurrentLimit(60, 10);
-		_driveLeftFront.configPeakCurrentDuration(50, 10);
+		_driveLeftFront.configPeakCurrentLimit(0, 10);
+		_driveLeftFront.configPeakCurrentDuration(0, 10);
 		_driveLeftFront.enableCurrentLimit(true);
 		_driveRightFront.set(ControlMode.PercentOutput, 0.0);
 		_driveRightFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
 		_driveRightFront.setSensorPhase(true);
 		_driveRightFront.setNeutralMode(NeutralMode.Brake);
 		_driveRightFront.configContinuousCurrentLimit(40, 10);
-		_driveRightFront.configPeakCurrentLimit(60, 10);
-		_driveRightFront.configPeakCurrentDuration(50, 10);
+		_driveRightFront.configPeakCurrentLimit(0, 10);
+		_driveRightFront.configPeakCurrentDuration(0, 10);
 		_driveRightFront.enableCurrentLimit(true);
 		_driveLeftRear.set(ControlMode.PercentOutput, 0.0);
 		_driveLeftRear.setNeutralMode(NeutralMode.Brake);
 		_driveLeftRear.configContinuousCurrentLimit(40, 10);
-		_driveLeftRear.configPeakCurrentLimit(60, 10);
-		_driveLeftRear.configPeakCurrentDuration(50, 10);
+		_driveLeftRear.configPeakCurrentLimit(0, 10);
+		_driveLeftRear.configPeakCurrentDuration(0, 10);
 		_driveLeftRear.enableCurrentLimit(true);
 		_driveRightRear.set(ControlMode.PercentOutput, 0.0);
 		_driveRightRear.setNeutralMode(NeutralMode.Brake);
 		_driveRightRear.configContinuousCurrentLimit(40, 10);
-		_driveRightRear.configPeakCurrentLimit(60, 10);
-		_driveRightRear.configPeakCurrentDuration(50, 10);
+		_driveRightRear.configPeakCurrentLimit(0, 10);
+		_driveRightRear.configPeakCurrentDuration(0, 10);
 		_driveRightRear.enableCurrentLimit(true);
 	}
 
