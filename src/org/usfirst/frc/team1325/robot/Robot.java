@@ -119,7 +119,7 @@ public class Robot extends IterativeRobot {
 		Robot._driveRightRear.set(ControlMode.PercentOutput, 0.0);
 		logThread.interrupt();
 
-		if(logThread.isAlive() && logThread.isInterrupted()) {
+		if(logThread.isInterrupted()) {
 			System.out.println("pls work");
 			File f = new File("/home/lvuser/logs");
 			if(!f.exists()) f.mkdir();
