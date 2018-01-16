@@ -8,7 +8,7 @@ import java.io.*;
 import java.util.*;
 
 public class Robot extends IterativeRobot {
-	private static final TalonSRX _driveLeftFront = new TalonSRX(2);//Has mag encoder plugged in Positive = For
+	private static final TalonSRX _driveLeftFront = new TalonSRX(1);//Has mag encoder plugged in Positive = For
 	private static final TalonSRX _driveLeftRear = new TalonSRX(3);
 	private static final TalonSRX _driveRightFront = new TalonSRX(15);//Has mag encoder plugged in Negative = For
 	private static final TalonSRX _driveRightRear = new TalonSRX(12);
