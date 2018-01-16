@@ -121,22 +121,22 @@ public class Robot extends IterativeRobot {
 
 		if(logThread.isInterrupted()) {
 			File f = new File("/home/lvuser/logs");
-			if(!f.exists() && f.mkdir())
-				try {
-					BufferedWriter bw = new BufferedWriter(new FileWriter(String.format("/home/lvuser/logs/%tB%te%tY-%tl%tM%tS%tp.csv",
-							c, c, c, c, c, c, c)));
-					bw.write("leftFront, leftRear, rightFront, rightRear, leftVelNativeUnits, rightVelNativeUnits, time");
+			if(!f.exists()) f.mkdir();
+			try {
+				BufferedWriter bw = new BufferedWriter(new FileWriter(String.format("/home/lvuser/logs/%tB%te%tY-%tl%tM%tS%tp.csv",
+						c, c, c, c, c, c, c)));
+				bw.write("leftFront, leftRear, rightFront, rightRear, leftVelNativeUnits, rightVelNativeUnits, time");
+				bw.newLine();
+				for(Data log : logs) {
+					bw.write(log.leftFront + "," + log.leftRear + "," + log.rightFront + "," + log.rightRear + "," + log.leftVelNativeUnits
+							+ "," + log.rightVelNativeUnits + "," + log.time);
 					bw.newLine();
-					for(Data log : logs) {
-						bw.write(log.leftFront + "," + log.leftRear + "," + log.rightFront + "," + log.rightRear + "," + log.leftVelNativeUnits
-								+ "," + log.rightVelNativeUnits + "," + log.time);
-						bw.newLine();
-					}
-					bw.close();
-					System.out.println("DONE " + logs.length + " " + avgdT / counter + " " + (System.nanoTime() - time) / 1000000000);
-				} catch(IOException e) {
-					e.printStackTrace();
 				}
+				bw.close();
+				System.out.println("DONE " + logs.length + " " + avgdT / counter + " " + (System.nanoTime() - time) / 1000000000);
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
