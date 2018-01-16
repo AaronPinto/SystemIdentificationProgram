@@ -120,6 +120,7 @@ public class Robot extends IterativeRobot {
 		logThread.interrupt();
 
 		if(logThread.isInterrupted()) {
+			System.out.println("pls work");
 			File f = new File("/home/lvuser/logs");
 			if(!f.exists()) f.mkdir();
 			try {
