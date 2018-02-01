@@ -149,11 +149,13 @@ public class Robot extends IterativeRobot {
 			try {
 				BufferedWriter bw = new BufferedWriter(new FileWriter(String.format("/home/lvuser/logs/%tB%te%tY-%tl%tM%tS%tp.csv",
 						c, c, c, c, c, c, c)));
-				bw.write("lfM, lrM, rfM, rrM, leftCmd, rightCmd, totalLeftCurr, totalRightCurr, leftVelNativeUnits, rightVelNativeUnits, gyroRate, time");
+				bw.write("lfM, lrM, rfM, rrM, leftCmd, rightCmd, totalLeftCurr, totalRightCurr, leftVelNativeUnits, rightVelNativeUnits, " +
+						"gyroRate, time");
 				bw.newLine();
 				for(Data log : logs) {
-					bw.write(log.lfM + "," + log.lrM + "," + log.rfM + "," + log.rrM + "," + log.leftCmd + "," + log.rightCmd + "," + log.totalLeftCurr + ","
-							+ log.totalRightCurr + "," + log.leftVelNativeUnits + "," + log.rightVelNativeUnits + "," + log.gyroRate + "," + log.time);
+					bw.write(log.lfM + "," + log.lrM + "," + log.rfM + "," + log.rrM + "," + log.leftCmd + "," + log.rightCmd + "," +
+							log.totalLeftCurr + "," + log.totalRightCurr + "," + log.leftVelNativeUnits + "," + log.rightVelNativeUnits + ","
+							+ log.gyroRate + "," + log.time);
 					bw.newLine();
 				}
 				bw.close();
