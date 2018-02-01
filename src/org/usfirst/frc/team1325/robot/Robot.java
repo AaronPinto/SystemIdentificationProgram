@@ -80,6 +80,8 @@ public class Robot extends IterativeRobot {
 						logs[counter].rrM = rrM.getMotorOutputPercent();
 						logs[counter].leftCmd = 0.0;
 						logs[counter].rightCmd = val;
+						logs[counter].totalLeftCurr = lfM.getOutputCurrent() + lrM.getOutputCurrent();
+						logs[counter].totalRightCurr = rfM.getOutputCurrent() + rrM.getOutputCurrent();
 						logs[counter].leftVelNativeUnits = lfM.getSelectedSensorVelocity(0);
 						logs[counter].rightVelNativeUnits = rfM.getSelectedSensorVelocity(0);
 						logs[counter].gyroRate = gyro.getRate();
@@ -107,6 +109,8 @@ public class Robot extends IterativeRobot {
 						logs[counter].rrM = rrM.getMotorOutputPercent();
 						logs[counter].leftCmd = val;
 						logs[counter].rightCmd = 0.0;
+						logs[counter].totalLeftCurr = lfM.getOutputCurrent() + lrM.getOutputCurrent();
+						logs[counter].totalRightCurr = rfM.getOutputCurrent() + rrM.getOutputCurrent();
 						logs[counter].leftVelNativeUnits = lfM.getSelectedSensorVelocity(0);
 						logs[counter].rightVelNativeUnits = rfM.getSelectedSensorVelocity(0);
 						logs[counter].gyroRate = gyro.getRate();
@@ -145,11 +149,11 @@ public class Robot extends IterativeRobot {
 			try {
 				BufferedWriter bw = new BufferedWriter(new FileWriter(String.format("/home/lvuser/logs/%tB%te%tY-%tl%tM%tS%tp.csv",
 						c, c, c, c, c, c, c)));
-				bw.write("lfM, lrM, rfM, rrM, leftCmd, rightCmd, leftVelNativeUnits, rightVelNativeUnits, gyroRate, time");
+				bw.write("lfM, lrM, rfM, rrM, leftCmd, rightCmd, totalLeftCurr, totalRightCurr, leftVelNativeUnits, rightVelNativeUnits, gyroRate, time");
 				bw.newLine();
 				for(Data log : logs) {
-					bw.write(log.lfM + "," + log.lrM + "," + log.rfM + "," + log.rrM + "," + log.leftCmd + "," + log.rightCmd + "," +
-							log.leftVelNativeUnits + "," + log.rightVelNativeUnits + "," + log.gyroRate + "," + log.time);
+					bw.write(log.lfM + "," + log.lrM + "," + log.rfM + "," + log.rrM + "," + log.leftCmd + "," + log.rightCmd + "," + log.totalLeftCurr + ","
+							+ log.totalRightCurr + "," + log.leftVelNativeUnits + "," + log.rightVelNativeUnits + "," + log.gyroRate + "," + log.time);
 					bw.newLine();
 				}
 				bw.close();
@@ -161,7 +165,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	class Data {
-		Double lfM, lrM, rfM, rrM, leftCmd, rightCmd, time, gyroRate;
+		Double lfM, lrM, rfM, rrM, leftCmd, rightCmd, totalLeftCurr, totalRightCurr, time, gyroRate;
 		int leftVelNativeUnits, rightVelNativeUnits;
 
 		Data() {
@@ -171,6 +175,8 @@ public class Robot extends IterativeRobot {
 			this.rrM = 0.0;
 			this.leftCmd = 0.0;
 			this.rightCmd = 0.0;
+			this.totalLeftCurr = 0.0;
+			this.totalRightCurr = 0.0;
 			this.leftVelNativeUnits = 0;
 			this.rightVelNativeUnits = 0;
 			this.gyroRate = 0.0;
