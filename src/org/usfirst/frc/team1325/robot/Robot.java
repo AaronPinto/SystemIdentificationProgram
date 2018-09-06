@@ -25,74 +25,36 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void robotInit() {
-		lfM.set(ControlMode.PercentOutput, 0.0);
-		lfM.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
-		lfM.setSensorPhase(true);
-		lfM.setNeutralMode(NeutralMode.Brake);
-		lfM.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 5, 0);
-		lfM.configContinuousCurrentLimit(40, 10);
-		lfM.configPeakCurrentLimit(0, 10);
-		lfM.configPeakCurrentDuration(0, 10);
-		lfM.enableCurrentLimit(true);
-		rfM.set(ControlMode.PercentOutput, 0.0);
-		rfM.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
-		rfM.setSensorPhase(true);
-		rfM.setNeutralMode(NeutralMode.Brake);
-		rfM.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 5, 0);
-		rfM.configContinuousCurrentLimit(40, 10);
-		rfM.configPeakCurrentLimit(0, 10);
-		rfM.configPeakCurrentDuration(0, 10);
-		rfM.enableCurrentLimit(true);
-		lrM.set(ControlMode.PercentOutput, 0.0);
-		lrM.setNeutralMode(NeutralMode.Brake);
-		lrM.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 5, 0);
-		lrM.configContinuousCurrentLimit(40, 10);
-		lrM.configPeakCurrentLimit(0, 10);
-		lrM.configPeakCurrentDuration(0, 10);
-		lrM.enableCurrentLimit(true);
-		rrM.set(ControlMode.PercentOutput, 0.0);
-		rrM.setNeutralMode(NeutralMode.Brake);
-		rrM.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 5, 0);
-		rrM.configContinuousCurrentLimit(40, 10);
-		rrM.configPeakCurrentLimit(0, 10);
-		rrM.configPeakCurrentDuration(0, 10);
-		rrM.enableCurrentLimit(true);
+		configTalon(lfM, true);//left front motor
+		configTalon(rfM, true);//right front motor
+		configTalon(lrM, false);//left rear motor
+		configTalon(rrM, false);//right rear motor
 	}
 
 	public void teleopInit() {
 		logThread = new Thread(() -> {
 			boolean secondSide = false;
-			double start, start2, startTime = start = start2 = time = System.nanoTime();
+			double overallStart, start2, startTime = overallStart = start2 = time = System.nanoTime();
+
 			while(!Thread.interrupted()) {
 				delta = (System.nanoTime() - startTime) / 1000000000.0;//While loop period
-				if(((System.nanoTime() - start) / 1000000000.0) < totalTime / 2.0) {//Which motor
+				if(((System.nanoTime() - overallStart) / 1000000000.0) < totalTime / 2.0) {//Which motor
 					if(delta >= samplePeriod) {
 						avgdT += delta;
 						counter++;
 						startTime = System.nanoTime();
 						//y = sin(0.4x^2)
 						double val = Math.sin(0.4 * Math.pow((startTime - start2) / 1000000000.0, 2));
-						Robot.rfM.set(ControlMode.PercentOutput, val);
-						Robot.rrM.set(ControlMode.PercentOutput, val);
-						logs[counter].lfM = lfM.getMotorOutputPercent();
-						logs[counter].lrM = lrM.getMotorOutputPercent();
-						logs[counter].rfM = rfM.getMotorOutputPercent();
-						logs[counter].rrM = rrM.getMotorOutputPercent();
+						setTalons(val, rfM, rrM);
+						logData();
 						logs[counter].leftCmd = 0.0;
 						logs[counter].rightCmd = val;
-						logs[counter].totalLeftCurr = lfM.getOutputCurrent() + lrM.getOutputCurrent();
-						logs[counter].totalRightCurr = rfM.getOutputCurrent() + rrM.getOutputCurrent();
-						logs[counter].leftVelNativeUnits = lfM.getSelectedSensorVelocity(0);
-						logs[counter].rightVelNativeUnits = rfM.getSelectedSensorVelocity(0);
-						logs[counter].gyroRate = gyro.getRate();
-						logs[counter].time = (System.nanoTime() - time) / 1000000000.0;
 					}
-				} else if((((System.nanoTime() - start) / 1000000000.0) >= totalTime / 2.0) && (((System.nanoTime() - start) / 1000000000.0)
-						<= totalTime)) {
+				} else if((((System.nanoTime() - overallStart) / 1000000000.0) >= totalTime / 2.0) &&
+						(((System.nanoTime() - overallStart) / 1000000000.0) <= totalTime)) {
 					if(!secondSide) {
 						secondSide = true;
-						Robot.rfM.set(ControlMode.PercentOutput, 0.0);
-						Robot.rrM.set(ControlMode.PercentOutput, 0.0);
+						setTalons(0.0, rfM, rrM);
 						start2 = System.nanoTime();
 					}
 					if(delta >= samplePeriod) {
@@ -101,27 +63,14 @@ public class Robot extends IterativeRobot {
 						startTime = System.nanoTime();
 						//y = sin(0.4x^2)
 						double val = Math.sin(0.4 * Math.pow((startTime - start2) / 1000000000.0, 2));
-						Robot.lfM.set(ControlMode.PercentOutput, val);
-						Robot.lrM.set(ControlMode.PercentOutput, val);
-						logs[counter].lfM = lfM.getMotorOutputPercent();
-						logs[counter].lrM = lrM.getMotorOutputPercent();
-						logs[counter].rfM = rfM.getMotorOutputPercent();
-						logs[counter].rrM = rrM.getMotorOutputPercent();
+						setTalons(val, lfM, lrM);
+						logData();
 						logs[counter].leftCmd = val;
 						logs[counter].rightCmd = 0.0;
-						logs[counter].totalLeftCurr = lfM.getOutputCurrent() + lrM.getOutputCurrent();
-						logs[counter].totalRightCurr = rfM.getOutputCurrent() + rrM.getOutputCurrent();
-						logs[counter].leftVelNativeUnits = lfM.getSelectedSensorVelocity(0);
-						logs[counter].rightVelNativeUnits = rfM.getSelectedSensorVelocity(0);
-						logs[counter].gyroRate = gyro.getRate();
-						logs[counter].time = (System.nanoTime() - time) / 1000000000.0;
 					}
 				} else {
 					time = System.nanoTime();
-					Robot.lfM.set(ControlMode.PercentOutput, 0.0);
-					Robot.lrM.set(ControlMode.PercentOutput, 0.0);
-					Robot.rfM.set(ControlMode.PercentOutput, 0.0);
-					Robot.rrM.set(ControlMode.PercentOutput, 0.0);
+					setTalons(0.0, lfM, lrM, rfM, rrM);
 					return;
 				}
 			}
@@ -130,10 +79,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void disabledInit() {
-		Robot.lfM.set(ControlMode.PercentOutput, 0.0);
-		Robot.lrM.set(ControlMode.PercentOutput, 0.0);
-		Robot.rfM.set(ControlMode.PercentOutput, 0.0);
-		Robot.rrM.set(ControlMode.PercentOutput, 0.0);
+		setTalons(0.0, lfM, lrM, rfM, rrM);
 		logThread.interrupt();
 
 		try {
@@ -143,7 +89,6 @@ public class Robot extends IterativeRobot {
 		}
 
 		if(logThread.isInterrupted() || (!logThread.isAlive() && !Double.isNaN(avgdT / counter))) {
-			System.out.println("pls work");
 			File f = new File("/home/lvuser/logs");
 			if(!f.exists()) f.mkdir();
 			try {
@@ -184,5 +129,37 @@ public class Robot extends IterativeRobot {
 			this.gyroRate = 0.0;
 			this.time = 0.0;
 		}
+	}
+
+	private void configTalon(TalonSRX talon, boolean hasSensor) {
+		if(hasSensor) {
+			talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+			talon.setSensorPhase(true);
+		}
+		talon.set(ControlMode.PercentOutput, 0.0);
+		talon.setNeutralMode(NeutralMode.Brake);
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 5, 0);
+		talon.configContinuousCurrentLimit(40, 10);
+		talon.configPeakCurrentLimit(0, 10);
+		talon.configPeakCurrentDuration(0, 10);
+		talon.enableCurrentLimit(true);
+	}
+
+	private void setTalons(double val, TalonSRX... talons) {
+		for(TalonSRX t : talons)
+			t.set(ControlMode.PercentOutput, val);
+	}
+
+	private void logData() {
+		logs[counter].lfM = lfM.getMotorOutputPercent();
+		logs[counter].lrM = lrM.getMotorOutputPercent();
+		logs[counter].rfM = rfM.getMotorOutputPercent();
+		logs[counter].rrM = rrM.getMotorOutputPercent();
+		logs[counter].totalLeftCurr = lfM.getOutputCurrent() + lrM.getOutputCurrent();
+		logs[counter].totalRightCurr = rfM.getOutputCurrent() + rrM.getOutputCurrent();
+		logs[counter].leftVelNativeUnits = lfM.getSelectedSensorVelocity(0);
+		logs[counter].rightVelNativeUnits = rfM.getSelectedSensorVelocity(0);
+		logs[counter].gyroRate = gyro.getRate();
+		logs[counter].time = (System.nanoTime() - time) / 1000000000.0;
 	}
 }
